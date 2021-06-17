@@ -13,15 +13,23 @@ router.get("/profile", function (req, res, next) {
   console.log(req.user);
   res.render("profile.html", { profile:  req.user._json});
 });
+router.get("/signup", function (req, res, next) {
+  res.render("signup.html");
+
+})
+router.post('/signup', passport.authenticate('local-signup', {
+  successRedirect: '/login', // chuyển hướng tới trang được bảo vệ
+  failureRedirect: '/signup', // trở lại trang đăng ký nếu có lỗi
+  failureFlash: false // allow flash messages
+}));
 router.get("/login", function (req, res, next) {
   res.render("login.html");
 });
-router.post("/login",
-  passport.authenticate('local', {failureRedirect : '/login'}),
-  function (req, res){
-    res.redirect('/profile') 
-  }
-  )
+router.post('/login', (req, res, next)=> {console.log(33333); next()},passport.authenticate('local', {
+  successRedirect: '/profile', // chuyển hướng tới trang được bảo vệ
+  failureRedirect: '/login', // trở lại trang đăng ký nếu có lỗi
+  failureFlash: false // allow flash messages
+}));
 // FB Login
 router.get(
   "/auth/facebook",
