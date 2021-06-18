@@ -1,3 +1,9 @@
-const loginController = function(req, res, next) {
-    res.render('login.html');
-  }
+
+module.exports = {
+    isLogged : function (req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/login');
+    }
+}

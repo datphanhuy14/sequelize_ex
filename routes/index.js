@@ -1,21 +1,22 @@
 var express = require('express');
 var router = express.Router();
-const passport = require("passport");
-
+let passport = require("passport");
+let loginCont = require('../controllers/login.controller');
+let logoutClick = require('../controllers/logout.controller')
 
 /* GET home page. */
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index.html");
+  res.render("index.html" , {profile:  req.user});
 });
 // PROFILE
-router.get("/profile", function (req, res, next) {
-  console.log(req.user);
-  res.render("profile.html", { profile:  req.user._json});
+router.get("/profile", loginCont.isLogged , function (req, res, next) {
+  console.log('profile : ', req.user);
+  res.render("profile.html", { profile:  req.user});
 });
+
 router.get("/signup", function (req, res, next) {
   res.render("signup.html");
-
 })
 router.post('/signup', passport.authenticate('local-signup', {
   successRedirect: '/login', // chuyển hướng tới trang được bảo vệ
@@ -25,10 +26,10 @@ router.post('/signup', passport.authenticate('local-signup', {
 router.get("/login", function (req, res, next) {
   res.render("login.html");
 });
-router.post('/login', (req, res, next)=> {console.log(33333); next()},passport.authenticate('local', {
+router.post('/login' ,passport.authenticate('local', {
   successRedirect: '/profile', // chuyển hướng tới trang được bảo vệ
   failureRedirect: '/login', // trở lại trang đăng ký nếu có lỗi
-  failureFlash: false // allow flash messages
+  failureFlash: "Đăng nhập không thành công." // allow flash messages
 }));
 // FB Login
 router.get(
@@ -49,17 +50,16 @@ router.get(
     scope: ["profile", "email"],
   })
 );
-
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
+
     successRedirect: "/profile",
     failureRedirect: "/login"})
 );
-router.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
+router.get('/logout', logoutClick.isLogout , (req, res) => {
+  res.redirect('/');
+}
 
+)
 module.exports = router;

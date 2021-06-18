@@ -5,11 +5,11 @@
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="card card-signin my-5">
                 <div class="card" style="width:500px">
-                    <img class="card-img-top" src="img_avatar1.png" alt="Card image">
+{#                    <img class="card-img-top" src="img_avatar1.png" alt="Card image">#}
                     <div class="card-body">
-                        <h4 id="name" class="card-title">John Doe</h4>
-                        <p id="emai;" class="card-text">{{user}}</p>
-                        <a href="#" class="btn btn-primary">See Profile</a>
+                        <h4 id="name" class="card-title">{{ profile.email }}</h4>
+                        <p id="emai;" class="card-text">{{ profile | dump() }}</p>
+                        <a href="/logout" class="btn btn-primary">Logout</a>
                     </div>
                 </div>
             </div>    
