@@ -21,7 +21,7 @@ module.exports = (passport) => {
             } else {
                 // if there is no user with that email
                 // create the user
-            const newUser = await models.user.create({email,password})
+            const newUser = await models.user.create({email,password, displayName : req.body.displayName})
                 return done(null, newUser);
             }
         })
@@ -33,23 +33,27 @@ module.exports = (passport) => {
                 passwordField: "password",
                 passReqToCallback: true,
             },
-            async function(req, email, password, done) {
+                function(req, email, password, done) {
                 //
                 // console.log(email);
-                const user = await models.user.findOne({ where: { email :  email }, raw: true});
-                console.log(user);
-                if(!user){
-                    // req.flash('error_msg', 'Vui lòng đăng nhập lại.');
-                    done(null, null);
-                if (user.password!= password) {
-                    return done(null, false, 
-                        req.flash('incorrect_msg', 'email or password is incorrect.'))
-                }    
-                }else{
-                    req.flash('success_msg', 'Đăng nhập thành công.');
-                    done(null, user);
-                }
-
+                const user = models.user.findOne({ where: { email: email } })
+                .then(user => {
+                  if (!user) {
+                      console.log('1')
+                    return done(null, null);
+                  }
+      
+                  if (user.password != password) {
+                      console.log('2')
+                    return done(null, false);
+                  }
+                  console.log('3')
+                  return done(null, user);
+                })
+                .catch(err => {
+                  console.log('Error:', err);
+                  return done(null, false);
+                });
             }
         )
     );

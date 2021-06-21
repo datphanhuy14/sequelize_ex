@@ -12,7 +12,7 @@
         "idle": 10000
       },
       "sync": {
-          "force": true
+          "force": false
       },
       "logging" : false
     }
