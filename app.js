@@ -32,7 +32,7 @@ require('./passport')(passport);
 // Passport & Session 
 app.use(
   session({
-    // store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({ client: redisClient }),
     saveUninitialized: false,
     secret: 'keyboard cat',
     resave: false,
